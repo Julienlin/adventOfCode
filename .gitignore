@@ -1,1 +1,3 @@
 .credentials
+.vscode
+.mypy_cache
