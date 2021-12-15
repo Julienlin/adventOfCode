@@ -1,3 +1,4 @@
 .credentials
 .vscode
 .mypy_cache
+.venv
