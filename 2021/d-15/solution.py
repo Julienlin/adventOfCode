@@ -5,7 +5,7 @@ from networkx.algorithms.shortest_paths.weighted import (
 )
 
 if __name__ == "__main__":
-    G = nx.Graph()
+    G = nx.DiGraph()
     with open("input.txt") as f:
         grid = [list(map(int, line.strip())) for line in f.readlines()]
 
@@ -25,12 +25,15 @@ if __name__ == "__main__":
             if j > 0:
                 end = i * len_col + j - 1
                 edges.append((beg, end, grid[i][j - 1]))
+            if i > 0:
+                end = (i - 1) * len_col + j
+                edges.append((beg, end, grid[i - 1][j]))
 
             G.add_weighted_edges_from(edges)
 
     # for n, nbrs in G.adj.items():
     #     for nbr, eattr in nbrs.items():
-    #         wt = eattr['weight']
+    #         wt = eattr["weight"]
     #         print(f"({n}, {nbr}, {wt})")
 
     print(dijkstra_path_length(G, 0, len(grid) * len_col - 1))
