@@ -35,7 +35,7 @@ def func1(input_filename):
 
 def func2(input_filename):
     maps = get_maps(input_filename)
-    slopes=[(1, 1), (1, 3), (1, 5), (1, 7), (2, 1)]
+    slopes = [(1, 1), (1, 3), (1, 5), (1, 7), (2, 1)]
     tot_nb_trees = 1
     for slope in slopes:
         nb_trees = get_nb_trees(maps, slope)

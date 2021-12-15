@@ -10,12 +10,14 @@ def get_inputs(input_filename):
     inputs = input.split("\n\n")
     return inputs
 
+
 def get_set_from_input(input):
     """
     docstring
     """
-    input = input.replace("\n","")
+    input = input.replace("\n", "")
     return set(input)
+
 
 def get_anwsers_set_from_input(input):
     """
@@ -23,6 +25,7 @@ def get_anwsers_set_from_input(input):
     """
     inputs = input.split("\n")
     return list(map(lambda x: set(x), inputs))
+
 
 def func1(input_filename):
     """
@@ -35,6 +38,7 @@ def func1(input_filename):
     for input in inputs:
         inc += len(get_set_from_input(input))
     return inc
+
 
 def func2(input_filename):
     """

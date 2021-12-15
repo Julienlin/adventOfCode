@@ -1,5 +1,3 @@
-
-
 def main():
     with open("input.txt") as f:
         lines = f.readlines()
@@ -11,18 +9,19 @@ def main():
 
     return compute(m)
 
+
 def compute(m):
     count = 0
-    for index,value in enumerate(m[1:]):
+    for index, value in enumerate(m[1:]):
         print(index, value, m[index])
         if value > m[index]:
-            count +=1
+            count += 1
     return count
 
-def transform(lst:list[int]) -> list[int]:
+
+def transform(lst: list[int]) -> list[int]:
     return [sum(value) for value in zip(lst, lst[1:], lst[2:])]
 
 
-
 if __name__ == "__main__":
-   print(main())
+    print(main())

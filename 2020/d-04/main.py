@@ -107,7 +107,7 @@ def func2(input_filename):
     inc = 0
     for input in inputs:
         passport = parse_input(input)
-        if  is_valid_1(passport):
+        if is_valid_1(passport):
             print(passport, is_valid_2(passport))
         if is_valid_2(passport):
             inc += 1

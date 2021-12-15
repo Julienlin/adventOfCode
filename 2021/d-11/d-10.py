@@ -11,7 +11,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # top left corner
         if ix > 0 and iy > 0:
             top_left = ix - 1, iy - 1
-            assert n >= top_left[0] >=0 and m >= top_left[1] >=0
+            assert n >= top_left[0] >= 0 and m >= top_left[1] >= 0
             if grid[top_left[0], top_left[1]] < 10:
                 grid[top_left[0], top_left[1]] += 1
                 if grid[top_left[0], top_left[1]] == 10:
@@ -20,7 +20,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # top
         if ix > 0:
             top = ix - 1, iy
-            assert n >= top[0] >=0 and m >= top[1] >=0
+            assert n >= top[0] >= 0 and m >= top[1] >= 0
             if grid[top[0], top[1]] < 10:
                 grid[top[0], top[1]] += 1
                 if grid[top[0], top[1]] == 10:
@@ -29,7 +29,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # top right corner
         if ix > 0 and iy < m:
             top_right = ix - 1, iy + 1
-            assert n >= top_right[0] >=0 and m >= top_right[1] >=0
+            assert n >= top_right[0] >= 0 and m >= top_right[1] >= 0
             if grid[top_right[0], top_right[1]] < 10:
                 grid[top_right[0], top_right[1]] += 1
                 if grid[top_right[0], top_right[1]] == 10:
@@ -38,7 +38,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # right
         if iy < m:
             right = ix, iy + 1
-            assert n >= right[0] >=0 and m >= right[1] >=0
+            assert n >= right[0] >= 0 and m >= right[1] >= 0
             if grid[right[0], right[1]] < 10:
                 grid[right[0], right[1]] += 1
                 if grid[right[0], right[1]] == 10:
@@ -47,7 +47,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # bottom right
         if ix < n and iy < m:
             bottom_right = ix + 1, iy + 1
-            assert n >= bottom_right[0] >=0 and m >= bottom_right[1] >=0
+            assert n >= bottom_right[0] >= 0 and m >= bottom_right[1] >= 0
             if grid[bottom_right[0], bottom_right[1]] < 10:
                 grid[bottom_right[0], bottom_right[1]] += 1
                 if grid[bottom_right[0], bottom_right[1]] == 10:
@@ -56,7 +56,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # bottom
         if ix < n:
             bottom = ix + 1, iy
-            assert n >= bottom[0] >=0 and m >= bottom[1] >=0
+            assert n >= bottom[0] >= 0 and m >= bottom[1] >= 0
             if grid[bottom[0], bottom[1]] < 10:
                 grid[bottom[0], bottom[1]] += 1
                 if grid[bottom[0], bottom[1]] == 10:
@@ -65,7 +65,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # bottom left
         if ix < n and iy > 0:
             bottom_left = ix + 1, iy - 1
-            assert n >= bottom_left[0] >=0 and m >= bottom_left[1] >=0
+            assert n >= bottom_left[0] >= 0 and m >= bottom_left[1] >= 0
             if grid[bottom_left[0], bottom_left[1]] < 10:
                 grid[bottom_left[0], bottom_left[1]] += 1
                 if grid[bottom_left[0], bottom_left[1]] == 10:
@@ -73,7 +73,7 @@ def update_explosions(grid: np.ndarray, explosion_indexes: list[tuple[int, int]]
         # left
         if iy > 0:
             left = ix, iy - 1
-            assert n >= left[0] >=0 and m >= left[1] >=0
+            assert n >= left[0] >= 0 and m >= left[1] >= 0
             if grid[left[0], left[1]] < 10:
                 grid[left[0], left[1]] += 1
                 if grid[left[0], left[1]] == 10:
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
         if (grid == 0).all():
             print_grid(grid)
-            print(i+1)
+            print(i + 1)
             break
     # print_grid(grid)
     # print(explosion_count)

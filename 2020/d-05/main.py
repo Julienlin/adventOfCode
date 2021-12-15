@@ -37,8 +37,8 @@ def func2(input_filename):
     transformed = list(map(lambda x: get_seat_id(x), inputs))
     max_id = max(transformed)
     min_id = min(transformed)
-    nb_id = len(inputs)+1
-    seat = nb_id * (max_id + min_id)//2 - sum(transformed)
+    nb_id = len(inputs) + 1
+    seat = nb_id * (max_id + min_id) // 2 - sum(transformed)
     return seat
 
 

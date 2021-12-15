@@ -9,9 +9,7 @@ def add_to_adj(adj, START, i, j):
 
 
 def get_neighboorhood(adj: dict[str, list[str]], stack: list[str], neighboor: str):
-    count_lower = max(
-        (stack.count(el) for el in stack if el.islower())
-    )
+    count_lower = max((stack.count(el) for el in stack if el.islower()))
     # print(f"stack : {stack}")
     # print(f"head : {neighboor}")
     # print(f"count_lower : {count_lower}")
@@ -19,7 +17,9 @@ def get_neighboorhood(adj: dict[str, list[str]], stack: list[str], neighboor: st
     return [
         neig
         for neig in adj[neighboor]
-        if neig != "start" and neig.isupper() or (neig.islower() and stack.count(neig) < (3 - count_lower))
+        if neig != "start"
+        and neig.isupper()
+        or (neig.islower() and stack.count(neig) < (3 - count_lower))
     ]
 
 
