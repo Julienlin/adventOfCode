@@ -22,6 +22,9 @@ if __name__ == "__main__":
                 end = (i + 1) * len_col + j
                 # print(f"(beg, end, grid[i+1][j]) : {(beg, end, grid[i+1][j])}")
                 edges.append((beg, end, grid[i + 1][j]))
+            if j > 0:
+                end = i * len_col + j - 1
+                edges.append((beg, end, grid[i][j - 1]))
 
             G.add_weighted_edges_from(edges)
 
@@ -31,4 +34,5 @@ if __name__ == "__main__":
     #         print(f"({n}, {nbr}, {wt})")
 
     print(dijkstra_path_length(G, 0, len(grid) * len_col - 1))
-    print(dijkstra_path(G, 0, len(grid) * len_col - 1))
+    shortest_path = dijkstra_path(G, 0, len(grid) * len_col - 1)
+    print(shortest_path, len(shortest_path))
