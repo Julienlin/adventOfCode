@@ -3,8 +3,10 @@ from networkx.algorithms.shortest_paths.weighted import (
     dijkstra_path,
     dijkstra_path_length,
 )
+import cProfile
 
 if __name__ == "__main__":
+
     G = nx.DiGraph()
     with open("input.txt") as f:
         grid = [list(map(int, line.strip())) for line in f.readlines()]
@@ -51,7 +53,10 @@ if __name__ == "__main__":
     #     for nbr, eattr in nbrs.items():
     #         wt = eattr["weight"]
     #         print(f"({n}, {nbr}, {wt})")
+    with cProfile.Profile() as pr:
 
-    print(dijkstra_path_length(G, 0, len(grid) * len_col - 1))
-    shortest_path = dijkstra_path(G, 0, len(grid) * len_col - 1)
-    # print(shortest_path, len(shortest_path))
+        print(dijkstra_path_length(G, 0, len(grid) * len_col - 1))
+        # shortest_path = dijkstra_path(G, 0, len(grid) * len_col - 1)
+        # print(shortest_path, len(shortest_path))
+
+    pr.dump_stats("profile")
