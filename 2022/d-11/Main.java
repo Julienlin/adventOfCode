@@ -23,9 +23,12 @@ public class Main {
 
         Solution solution = new Solution1();
 
+        long startTime = System.nanoTime();
         long sol = solution.resolve(lines);
-
+        long stopTime = System.nanoTime();
+        
         System.out.println(sol);
+        System.out.println((stopTime - startTime) / 1000000000f);
 
     }
 }
