@@ -2,7 +2,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -11,7 +14,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("test.txt"))) {
             List<List<int[]>> lines = new ArrayList<>();
             String line;
             int minWidth = 500;
@@ -44,9 +47,12 @@ public class Main {
             System.out
                     .println(String.format("minWidth: %d, maxWidth: %d, maxHeight: %d", minWidth, maxWidth, maxHeight));
 
-            Simulator simulator = new Simulator(minWidth, maxWidth, maxHeight, lines);
-            System.out.println(simulator);
+            Simulable simulator;
+            // simulator = new Simulator(minWidth, maxWidth, maxHeight, lines);
+            simulator = new InfiniteFloorSimulator(maxHeight, lines);
+            // System.out.println(simulator);
             int tours = simulator.simulate();
+            // System.out.println(simulator);
             System.out.println(tours);
 
         } catch (Exception e) {
@@ -58,7 +64,11 @@ public class Main {
     }
 }
 
-class Simulator {
+interface Simulable {
+    int simulate();
+}
+
+class Simulator implements Simulable {
 
     int ROWS, COLS;
     int minWidth;
@@ -127,7 +137,8 @@ class Simulator {
         return sb.toString();
     }
 
-    int simulate() {
+    @Override
+    public int simulate() {
         int tours = 0;
         boolean isInfinite = false;
         int[] sand;
@@ -167,6 +178,126 @@ class Simulator {
         }
 
         return tours - 1;
+    }
+
+}
+
+class InfiniteFloorSimulator implements Simulable {
+    static final int COL = 0;
+    static final int ROW = 1;
+
+    enum Cell {
+        AIR,
+        WALL,
+        SAND
+    }
+
+    int maxHeight;
+    int[] source;
+    List<Integer> occupiedCells;
+
+    public InfiniteFloorSimulator(int maxHeight, List<List<int[]>> lines) {
+
+        source = new int[2];
+        source[ROW] = 0;
+        source[COL] = 500;
+
+        this.maxHeight = maxHeight + 1;
+
+        occupiedCells = new LinkedList<>();
+
+        for (List<int[]> line : lines) {
+            int[] pointA = line.get(0);
+            int[] pointB = line.get(1);
+
+            if (pointA[ROW] == pointB[ROW]) {
+                int row = pointA[ROW];
+                int leftMost = Math.min(pointA[COL], pointB[COL]);
+                int rightmost = Math.max(pointA[COL], pointB[COL]);
+                for (int i = leftMost; i <= rightmost; i++) {
+                    int[] newCell = new int[2];
+                    newCell[ROW] = row;
+                    newCell[COL] = i;
+                    occupyCell(newCell, Cell.WALL);
+                }
+            } else {
+                int col = pointA[COL];
+                int lessHigh = Math.min(pointA[ROW], pointB[ROW]);
+                int highest = Math.max(pointA[ROW], pointB[ROW]);
+                for (int i = lessHigh; i <= highest; i++) {
+                    int[] newCell = new int[2];
+                    newCell[ROW] = i;
+                    newCell[COL] = col;
+                    occupyCell(newCell, Cell.WALL);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public int simulate() {
+        int tours = 0;
+        int[] sand;
+        boolean isMoving;
+        int[] downCell, downLeftCell, downRightCell;
+        while (!isOccupied(source)) {
+            sand = source.clone();
+            isMoving = true;
+            while (isMoving) {
+                downCell = new int[2];
+                downCell[ROW] = sand[ROW] + 1;
+                downCell[COL] = sand[COL];
+
+                downLeftCell = new int[2];
+                downLeftCell[ROW] = sand[ROW] + 1;
+                downLeftCell[COL] = sand[COL] - 1;
+
+                downRightCell = new int[2];
+                downRightCell[ROW] = sand[ROW] + 1;
+                downRightCell[COL] = sand[COL] + 1;
+
+                if (sand[ROW] + 1 > maxHeight) {
+                    occupyCell(downRightCell, Cell.SAND);
+                    isMoving = false;
+                } else if (!isOccupied(downCell)) {
+                    sand[ROW]++;
+                } else if (!isOccupied(downLeftCell)) {
+                    sand[COL]--;
+                    sand[ROW]++;
+                } else if (!isOccupied(downRightCell)) {
+                    sand[COL]++;
+                    sand[ROW]++;
+                } else {
+                    occupyCell(downRightCell, Cell.SAND);
+                    isMoving = false;
+                }
+            }
+            tours++;
+            // System.out.println(occupiedCells.size());
+        }
+
+        return tours;
+    }
+
+    private boolean isOccupied(int[] cell) {
+        // InfiniteFloorSimulator.Cell cellType = occupiedCells.getOrDefault(computeCellCoordHash(cell), Cell.AIR);
+        // // System.out.println(String.format("cell: %s, cell type: %s", Arrays.toString(cell), cellType));
+        // return cellType != Cell.AIR;
+        return occupiedCells.contains(computeCellCoordHash(cell));
+
+    }
+
+    private Integer computeCellCoordHash(int[] cell) {
+        int a = cell[0];
+        int b = cell[1];
+        return (a + b) * (a + b + 1) / 2 + a;
+    }
+
+    private void occupyCell(int[] cell, Cell cellType) {
+        Integer hash = computeCellCoordHash(cell);
+        // occupiedCells.put(hash, cellType);
+        occupiedCells.add(hash);
     }
 
 }
