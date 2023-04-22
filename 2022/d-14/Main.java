@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -193,7 +194,7 @@ class InfiniteFloorSimulator implements Simulable {
 
     int maxHeight;
     int[] source;
-    Map<Integer, Cell> occupiedCellsMap;
+    List<Integer> occupiedCells;
 
     public InfiniteFloorSimulator(int maxHeight, List<List<int[]>> lines) {
 
@@ -203,7 +204,7 @@ class InfiniteFloorSimulator implements Simulable {
 
         this.maxHeight = maxHeight + 1;
 
-        occupiedCellsMap = new HashMap<>(100000);
+        occupiedCells = new LinkedList<>();
 
         for (List<int[]> line : lines) {
             int[] pointA = line.get(0);
@@ -280,9 +281,10 @@ class InfiniteFloorSimulator implements Simulable {
     }
 
     private boolean isOccupied(int[] cell) {
-        InfiniteFloorSimulator.Cell cellType = occupiedCellsMap.getOrDefault(computeCellCoordHash(cell), Cell.AIR);
-        // System.out.println(String.format("cell: %s, cell type: %s", Arrays.toString(cell), cellType));
-        return cellType != Cell.AIR;
+        // InfiniteFloorSimulator.Cell cellType = occupiedCells.getOrDefault(computeCellCoordHash(cell), Cell.AIR);
+        // // System.out.println(String.format("cell: %s, cell type: %s", Arrays.toString(cell), cellType));
+        // return cellType != Cell.AIR;
+        return occupiedCells.contains(computeCellCoordHash(cell));
 
     }
 
@@ -294,7 +296,8 @@ class InfiniteFloorSimulator implements Simulable {
 
     private void occupyCell(int[] cell, Cell cellType) {
         Integer hash = computeCellCoordHash(cell);
-        occupiedCellsMap.put(hash, cellType);
+        // occupiedCells.put(hash, cellType);
+        occupiedCells.add(hash);
     }
 
 }
