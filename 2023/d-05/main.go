@@ -10,12 +10,12 @@ import (
 )
 
 type Range struct {
-	DestinationStart int
-	SourceStart      int
-	Length           int
+	DestinationStart int64
+	SourceStart      int64
+	Length           int64
 }
 
-func (r Range) mapSource(source int) (int, bool) {
+func (r Range) mapSource(source int64) (int64, bool) {
 	dist := source - r.SourceStart
 
 	if dist < 0 || dist > r.Length {
@@ -29,7 +29,7 @@ type Mapper struct {
 	Ranges []Range
 }
 
-func (mapper Mapper) mapSource(source int) int {
+func (mapper Mapper) mapSource(source int64) int64 {
 	for _, r := range mapper.Ranges {
 		if dest, isInRange := r.mapSource(source); isInRange {
 			return dest
@@ -39,8 +39,8 @@ func (mapper Mapper) mapSource(source int) int {
 	return source
 }
 
-func readSeeds(line string) []int {
-	seeds := make([]int, 0, 100)
+func readSeeds(line string) []int64 {
+	seeds := make([]int64, 0, 100)
 
 	seedsString := strings.TrimPrefix(line, "seeds: ")
 
@@ -49,7 +49,7 @@ func readSeeds(line string) []int {
 		if err != nil {
 			log.Fatal(err)
 		}
-		seeds = append(seeds, seed)
+		seeds = append(seeds, int64(seed))
 	}
 
 	return seeds
@@ -74,11 +74,11 @@ func readRange(line string) Range {
 		log.Fatal(err)
 	}
 
-	return Range{DestinationStart: destinatinoStart, SourceStart: sourceStart, Length: length}
+	return Range{DestinationStart: int64(destinatinoStart), SourceStart: int64(sourceStart), Length: int64(length)}
 
 }
 
-func LocationNumber(mappers []Mapper, seed int) int {
+func LocationNumber(mappers []Mapper, seed int64) int64 {
 	destination := seed
 
 	for _, mapper := range mappers {
@@ -103,7 +103,7 @@ func part1(filename string) {
 
 	mappers := make([]Mapper, 0, 6)
 
-	var seeds []int
+	var seeds []int64
 
 	if scanner.Scan() {
 		seeds = readSeeds(scanner.Text())
@@ -142,7 +142,7 @@ func part1(filename string) {
 		log.Fatal(err)
 	}
 
-	locationNumbers := make([]int, 0, len(seeds))
+	locationNumbers := make([]int64, 0, len(seeds))
 
 	for _, seed := range seeds {
 		destination := LocationNumber(mappers, seed)
@@ -163,8 +163,8 @@ func part1(filename string) {
 }
 
 type seedRange struct {
-	Start  int
-	Length int
+	Start  int64
+	Length int64
 }
 
 func readRangeSeeds(line string) []seedRange {
@@ -185,7 +185,7 @@ func readRangeSeeds(line string) []seedRange {
 			log.Fatal(err)
 		}
 
-		seedRanges = append(seedRanges, seedRange{Start: seedRangeStart, Length: seedRangeLength})
+		seedRanges = append(seedRanges, seedRange{Start: int64(seedRangeStart), Length: int64(seedRangeLength)})
 
 	}
 
@@ -251,7 +251,7 @@ func part2(filename string) {
 	minLocation := LocationNumber(mappers, seedRanges[0].Start)
 
 	for _, sr := range seedRanges {
-		for i := 0; i < sr.Length; i++ {
+		for i := int64(0); i < sr.Length; i++ {
 			seed := sr.Start + i
 
 			destination := LocationNumber(mappers, seed)
@@ -265,6 +265,6 @@ func part2(filename string) {
 }
 
 func main() {
-	part1("test.txt")
-	part2("test.txt")
+	part1("input.txt")
+	part2("input.txt")
 }
