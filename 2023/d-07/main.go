@@ -12,7 +12,12 @@ import (
 )
 
 func main() {
-	part1("input.txt")
+	// part1("input.txt")
+	part2("input.txt")
+
+	// hand := Hand{Cards: []int{14, 1, 12, 8, 13}, Bid: 5}
+	//
+	// fmt.Println(countPairs(hand.Cards), countCard(hand.Cards, convertCardPart2(joker)), hand.GetHandTypePart2())
 
 }
 
@@ -77,7 +82,7 @@ func part1(filename string) {
 
 		// fmt.Println(hand.Cards, hand.Bid, "rank:", i)
 
-		fmt.Printf("sum = %v + %v * %v\n", sum, hand.Bid, i+1)
+		fmt.Printf("nb pairs %v, %v : %v, sum = %v + %v * %v\n", countPairs(hand.Cards), hand.GetHandType(), hand.Cards, sum, hand.Bid, i+1)
 		sum += hand.Bid * (i + 1)
 
 	}
@@ -132,7 +137,7 @@ func (h *Hand) GetHandType() HandType {
 
 	copy(cards, h.Cards)
 
-	sort.Slice(cards, func(i, j int) bool {
+	sort.SliceStable(cards, func(i, j int) bool {
 		return cards[i] < cards[j]
 	})
 
@@ -160,56 +165,28 @@ func (h *Hand) GetHandType() HandType {
 
 }
 
-func isFiveOfKind(cards []int) bool {
+func isNbOfKind(nb int) func([]int) bool {
+	return func(cards []int) bool {
 
-	for i := 0; i < len(cards); i++ {
-		c := cards[i]
-		if countCard(cards, c) == 5 {
-			return true
+		for i := 0; i < len(cards); i++ {
+			c := cards[i]
+			if countCard(cards, c) == nb {
+				return true
+			}
+
+			for i < len(cards)-1 && cards[i+1] == c {
+				i++
+			}
+
 		}
 
-		for i < len(cards) && cards[i] == c {
-			i++
-		}
-
+		return false
 	}
-
-	return false
 }
 
-func isFourOfKind(cards []int) bool {
-
-	for i := 0; i < len(cards); i++ {
-		c := cards[i]
-		if countCard(cards, c) == 4 {
-			return true
-		}
-
-		for i < len(cards) && cards[i] == c {
-			i++
-
-		}
-	}
-
-	return false
-}
-
-func isThreeOfKind(cards []int) bool {
-
-	for i := 0; i < len(cards); i++ {
-		c := cards[i]
-		if countCard(cards, c) == 3 {
-			return true
-		}
-
-		for i < len(cards) && cards[i] == c {
-			i++
-		}
-
-	}
-
-	return false
-}
+var isFiveOfKind = isNbOfKind(5)
+var isFourOfKind = isNbOfKind(4)
+var isThreeOfKind = isNbOfKind(3)
 
 func isFullHouse(cards []int) bool {
 	return isThreeOfKind(cards) && countPairs(cards) == 1
@@ -222,6 +199,7 @@ func countPairs(cards []int) int {
 
 	for i := 0; i < len(cards); i++ {
 		c := cards[i]
+		// fmt.Printf("card : %v, countPair: %v\n", c, countCard(cards, c))
 		if countCard(cards, c) == 2 {
 			if _, ok := pairLabel[c]; !ok {
 				pairLabel[c] = true
@@ -229,9 +207,10 @@ func countPairs(cards []int) int {
 			}
 		}
 
-		for i < len(cards) && cards[i] == c {
+		for i < len(cards)-1 && cards[i+1] == c {
 			i++
 		}
+
 	}
 
 	return countPairs
