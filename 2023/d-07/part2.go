@@ -72,7 +72,7 @@ func part2(filename string) {
 
 		// fmt.Println(hand.Cards, hand.Bid, "rank:", i)
 
-		fmt.Printf("nb pairs %v, %v : %v, sum = %v + %v * %v\n", countPairsPart2(hand.Cards), hand.GetHandTypePart2(), hand.Cards, sum, hand.Bid, i+1)
+		fmt.Printf("%v : %v, sum = %v + %v * %v\n", hand.GetHandTypePart2(), hand.Cards, sum, hand.Bid, i+1)
 		sum += hand.Bid * (i + 1)
 
 	}
@@ -201,7 +201,7 @@ func (h *Hand) GetHandTypePart2() HandType {
 		h.handType = &HandType{TwoPairs: true}
 	} else if isOnePairPart2(cards) {
 		h.handType = &HandType{OnePair: true}
-	} else if isHighCardPart2(cards) {
+	} else if isHighCard(cards) {
 		h.handType = &HandType{HighCard: true}
 	} else {
 		h.handType = &HandType{}
@@ -235,67 +235,15 @@ var isFourOfKindPart2 = isNbOfKindPart2(4)
 var isThreeOfKindPart2 = isNbOfKindPart2(3)
 
 func isFullHousePart2(cards []int) bool {
-	// cardCount := make(map[int]int)
-	// for i := 0; i < len(cards); i++ {
-	// 	c := cards[i]
-	//
-	// 	cardCount[c] = countCardPart2(cards, c)
-	//
-	// 	for i < len(cards)-1 && cards[i+1] == c {
-	// 		i++
-	// 	}
-	//
-	// }
-
 	return isFullHouse(cards) || countPairs(cards) == 2 && countCard(cards, convertCardPart2(joker)) == 1
-
-}
-
-func countPairsPart2(cards []int) int {
-	pairLabel := make(map[int]bool)
-	countPairs := 0
-
-	for i := 0; i < len(cards); i++ {
-		c := cards[i]
-		// fmt.Printf("card : %v, countPair: %v\n", c, countCard(cards, c))
-		if countCardPart2(cards, c) == 2 {
-			if _, ok := pairLabel[c]; !ok {
-				pairLabel[c] = true
-				countPairs++
-			}
-		}
-
-		for i < len(cards)-1 && cards[i+1] == c {
-			i++
-		}
-
-	}
-
-	return countPairs
-
 }
 
 func isTwoPairPart2(cards []int) bool {
-	// return countPairsPart2(cards) == 2
 	return countPairs(cards) == 2 || countPairs(cards) == 1 && countCard(cards, convertCardPart2(joker)) == 1
 }
 
 func isOnePairPart2(cards []int) bool {
 	return countPairs(cards) == 1 || countPairs(cards) == 0 && countCard(cards, convertCardPart2(joker)) == 1
-}
-
-func isHighCardPart2(cards []int) bool {
-	cardLabel := make(map[int]bool)
-
-	for _, c := range cards {
-		if _, ok := cardLabel[c]; ok {
-			return false
-		} else {
-			cardLabel[c] = true
-		}
-	}
-
-	return true
 }
 
 func countCardPart2(cards []int, card int) int {
